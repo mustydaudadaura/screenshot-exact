@@ -1,8 +1,9 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Wheat } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { getSetupStatus, setupOwner } from "@/lib/setup.functions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -21,29 +22,28 @@ export const Route = createFileRoute("/auth")({
 
 function AuthPage() {
   const navigate = useNavigate();
-  const [mode, setMode] = useState<"in" | "up">("in");
+  const [needsOwner, setNeedsOwner] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [busy, setBusy] = useState(false);
 
+  useEffect(() => {
+    getSetupStatus().then((s) => setNeedsOwner(s.needsOwner)).catch(() => {});
+  }, []);
+
   async function submit(e: React.FormEvent): Promise<void> {
     e.preventDefault();
     setBusy(true);
-    if (mode === "in") {
+    try {
+      if (needsOwner) await setupOwner({ data: { full_name: name, email, password } });
       const { error } = await supabase.auth.signInWithPassword({ email, password });
-      setBusy(false);
-      if (error) return void toast.error(error.message === "Invalid login credentials" ? "Wrong email or password" : error.message);
+      if (error) throw new Error(error.message === "Invalid login credentials" ? "Wrong email or password" : error.message);
       navigate({ to: "/dashboard" });
-    } else {
-      const { data, error } = await supabase.auth.signUp({
-        email, password,
-        options: { emailRedirectTo: window.location.origin + "/dashboard", data: { full_name: name } },
-      });
+    } catch (err: any) {
+      toast.error(err.message?.startsWith("[") ? "Enter your name, a valid email and a password of 8+ characters." : err.message);
+    } finally {
       setBusy(false);
-      if (error) return void toast.error(error.message);
-      if (data.session) navigate({ to: "/dashboard" });
-      else toast.success("Check your email to confirm your account, then sign in.");
     }
   }
 
@@ -59,15 +59,18 @@ function AuthPage() {
       </div>
       <div className="flex items-center justify-center p-6">
         <form onSubmit={submit} className="w-full max-w-sm space-y-4">
-          <h2 className="font-display text-3xl">{mode === "in" ? "Staff sign in" : "Create owner account"}</h2>
-          {mode === "up" && <p className="text-sm text-muted-foreground">The first account becomes the bakery owner. Staff accounts are created by the owner.</p>}
-          {mode === "up" && <div><Label>Full name</Label><Input required value={name} onChange={(e) => setName(e.target.value)} className="mt-1 h-12" /></div>}
+          <h2 className="font-display text-3xl">{needsOwner ? "Set up Super Admin" : "Sign in"}</h2>
+          <p className="text-sm text-muted-foreground">
+            {needsOwner
+              ? "One-time setup: create the owner's Super Admin account. After this, only the Super Admin can create accounts."
+              : "Use the email and password given to you by the Super Admin."}
+          </p>
+          {needsOwner && <div><Label>Full name</Label><Input required value={name} onChange={(e) => setName(e.target.value)} className="mt-1 h-12" /></div>}
           <div><Label>Email</Label><Input required type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="mt-1 h-12" /></div>
-          <div><Label>Password</Label><Input required minLength={8} type="password" value={password} onChange={(e) => setPassword(e.target.value)} className="mt-1 h-12" /></div>
-          <Button type="submit" size="lg" className="h-12 w-full text-base" disabled={busy}>{busy ? "Please wait…" : mode === "in" ? "Sign in" : "Create account"}</Button>
-          <button type="button" onClick={() => setMode(mode === "in" ? "up" : "in")} className="w-full text-sm text-muted-foreground hover:text-foreground">
-            {mode === "in" ? "Setting up for the first time? Create the owner account" : "Already have an account? Sign in"}
-          </button>
+          <div><Label>Password</Label><Input required minLength={needsOwner ? 8 : undefined} type="password" value={password} onChange={(e) => setPassword(e.target.value)} className="mt-1 h-12" /></div>
+          <Button type="submit" size="lg" className="h-12 w-full text-base" disabled={busy}>
+            {busy ? "Please wait…" : needsOwner ? "Create Super Admin" : "Sign in"}
+          </Button>
         </form>
       </div>
     </div>

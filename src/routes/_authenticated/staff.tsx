@@ -11,7 +11,7 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
-import { ALL_ROLES, ROLE_LABELS, type AppRole } from "@/lib/roles";
+import { ASSIGNABLE_ROLES, ROLE_LABELS, type AppRole } from "@/lib/roles";
 import { createStaff, setStaffActive, updateStaffAccess } from "@/lib/staff.functions";
 import { departmentsQuery } from "./departments";
 import { useMe } from "@/hooks/use-me";
@@ -106,7 +106,7 @@ function StaffDialog({ staff, depts, canGrantOwner, onClose, onSaved }: {
   staff: Staff | null; depts: { id: string; name: string }[]; canGrantOwner: boolean; onClose: () => void; onSaved: () => void;
 }) {
   const [form, setForm] = useState({ full_name: "", email: "", password: "", phone: "", job_title: "" });
-  const [roles, setRoles] = useState<AppRole[]>(staff?.roles ?? ["staff"]);
+  const [roles, setRoles] = useState<AppRole[]>(staff?.roles ?? ["accountant"]);
   const [deptIds, setDeptIds] = useState<string[]>(staff?.department_ids ?? []);
   const [busy, setBusy] = useState(false);
   const toggle = <T,>(arr: T[], v: T) => (arr.includes(v) ? arr.filter((x) => x !== v) : [...arr, v]);
@@ -130,7 +130,7 @@ function StaffDialog({ staff, depts, canGrantOwner, onClose, onSaved }: {
         <DialogHeader><DialogTitle className="font-display text-2xl">{staff ? `Access for ${staff.full_name}` : "Add staff member"}</DialogTitle></DialogHeader>
         {!staff && (
           <div className="grid gap-3 sm:grid-cols-2">
-            {([["full_name", "Full name"], ["email", "Email"], ["password", "Temporary password"], ["phone", "Phone"], ["job_title", "Job title"]] as const).map(([k, l]) => (
+            {([["full_name", "Full name"], ["email", "Email"], ["password", "Password (8+ characters)"], ["phone", "Phone"], ["job_title", "Job title"]] as const).map(([k, l]) => (
               <div key={k} className={k === "full_name" ? "sm:col-span-2" : ""}>
                 <Label>{l}</Label>
                 <Input type={k === "password" ? "password" : k === "email" ? "email" : "text"} value={form[k]} onChange={(e) => setForm({ ...form, [k]: e.target.value })} className="mt-1 h-11" />
@@ -141,7 +141,7 @@ function StaffDialog({ staff, depts, canGrantOwner, onClose, onSaved }: {
         <div>
           <Label className="text-base">Job roles</Label>
           <div className="mt-2 grid grid-cols-2 gap-2">
-            {ALL_ROLES.filter((r) => r !== "owner" || canGrantOwner).map((r) => (
+            {ASSIGNABLE_ROLES.filter((r) => r !== "owner" || canGrantOwner).map((r) => (
               <label key={r} className="flex items-center gap-2 rounded-lg border p-2"><Checkbox checked={roles.includes(r)} onCheckedChange={() => setRoles(toggle(roles, r))} />{ROLE_LABELS[r]}</label>
             ))}
           </div>
