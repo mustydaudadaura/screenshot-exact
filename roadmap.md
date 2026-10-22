@@ -3,5 +3,6 @@
 - [ ] Phase 2: Stock & inventory (ingredients, units, receive/issue/transfer, counts, alerts)
 - [ ] Phase 3: Products, recipes & production batches
 - [ ] Phase 4: Sales, dispatch, remittances, receipts
-- [ ] Phase 5: Accounting & payroll
+- [x] Attendance kiosk + bag-based payroll
+- [ ] Phase 5: Accounting (payments, salary staff payroll)
 - [ ] Phase 6: Reports, exports, approvals, notifications
