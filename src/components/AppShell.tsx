@@ -1,11 +1,12 @@
 import { Link, Outlet, useNavigate } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
-import { LayoutDashboard, Users, HardHat, Building2, Settings, ScrollText, LogOut, Wheat, Menu } from "lucide-react";
+import { LayoutDashboard, Users, HardHat, Building2, Settings, ScrollText, LogOut, Menu } from "lucide-react";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useMe } from "@/hooks/use-me";
 import { isManager, ROLE_LABELS } from "@/lib/roles";
 import { Button } from "@/components/ui/button";
+import logo from "@/assets/am-logo.png.asset.json";
 
 export function AppShell() {
   const me = useMe();
@@ -45,14 +46,8 @@ export function AppShell() {
   return (
     <div className="flex min-h-screen">
       <aside className={`${open ? "flex" : "hidden"} fixed inset-y-0 left-0 z-40 w-64 flex-col bg-sidebar text-sidebar-foreground md:static md:flex`}>
-        <div className="flex items-center gap-2 px-5 py-6">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-            <Wheat className="h-5 w-5" />
-          </div>
-          <div>
-            <div className="font-display text-lg leading-tight">GCBMS</div>
-            <div className="text-xs opacity-70">Global Concept Bakery</div>
-          </div>
+        <div className="mx-4 my-5 rounded-xl bg-card p-3">
+          <img src={logo.url} alt="A&M Global Concept Bakery" className="mx-auto h-24 w-auto" />
         </div>
         <nav className="flex-1 space-y-1 px-3">
           {links.filter((l) => l.show).map((l) => (
@@ -78,7 +73,7 @@ export function AppShell() {
       <div className="flex min-w-0 flex-1 flex-col">
         <header className="flex items-center gap-3 border-b bg-card px-4 py-3 md:hidden">
           <Button variant="ghost" size="icon" onClick={() => setOpen(!open)} aria-label="Menu"><Menu /></Button>
-          <span className="font-display text-lg">GCBMS</span>
+          <img src={logo.url} alt="A&M Global Concept Bakery" className="h-10 w-auto" />
         </header>
         <main className="flex-1 p-4 md:p-8"><Outlet /></main>
       </div>
