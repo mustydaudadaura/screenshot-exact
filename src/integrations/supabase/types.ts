@@ -14,16 +14,224 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      audit_logs: {
+        Row: {
+          action: string
+          actor_id: string | null
+          created_at: string
+          details: Json | null
+          entity: string
+          entity_id: string | null
+          id: string
+        }
+        Insert: {
+          action: string
+          actor_id?: string | null
+          created_at?: string
+          details?: Json | null
+          entity: string
+          entity_id?: string | null
+          id?: string
+        }
+        Update: {
+          action?: string
+          actor_id?: string | null
+          created_at?: string
+          details?: Json | null
+          entity?: string
+          entity_id?: string | null
+          id?: string
+        }
+        Relationships: []
+      }
+      business_settings: {
+        Row: {
+          address: string | null
+          business_name: string
+          currency: string
+          default_credit_limit: number
+          dispatch_prefix: string
+          id: number
+          invoice_prefix: string
+          phone: string | null
+          receipt_prefix: string
+          remittance_deadline_hours: number
+          timezone: string
+          updated_at: string
+        }
+        Insert: {
+          address?: string | null
+          business_name?: string
+          currency?: string
+          default_credit_limit?: number
+          dispatch_prefix?: string
+          id?: number
+          invoice_prefix?: string
+          phone?: string | null
+          receipt_prefix?: string
+          remittance_deadline_hours?: number
+          timezone?: string
+          updated_at?: string
+        }
+        Update: {
+          address?: string | null
+          business_name?: string
+          currency?: string
+          default_credit_limit?: number
+          dispatch_prefix?: string
+          id?: number
+          invoice_prefix?: string
+          phone?: string | null
+          receipt_prefix?: string
+          remittance_deadline_hours?: number
+          timezone?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      departments: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          is_active: boolean
+          name: string
+          sort_order: number
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          name: string
+          sort_order?: number
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          name?: string
+          sort_order?: number
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          email: string | null
+          full_name: string
+          id: string
+          is_active: boolean
+          job_title: string | null
+          phone: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          full_name?: string
+          id: string
+          is_active?: boolean
+          job_title?: string | null
+          phone?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          full_name?: string
+          id?: string
+          is_active?: boolean
+          job_title?: string | null
+          phone?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      staff_departments: {
+        Row: {
+          department_id: string
+          id: string
+          is_supervisor: boolean
+          user_id: string
+        }
+        Insert: {
+          department_id: string
+          id?: string
+          is_supervisor?: boolean
+          user_id: string
+        }
+        Update: {
+          department_id?: string
+          id?: string
+          is_supervisor?: boolean
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "staff_departments_department_id_fkey"
+            columns: ["department_id"]
+            isOneToOne: false
+            referencedRelation: "departments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "staff_departments_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
+      is_manager: { Args: { _user_id: string }; Returns: boolean }
     }
     Enums: {
-      [_ in never]: never
+      app_role:
+        | "owner"
+        | "admin"
+        | "supervisor"
+        | "storekeeper"
+        | "baker"
+        | "mixer"
+        | "packager"
+        | "dispatcher"
+        | "sales"
+        | "accountant"
+        | "cleaner"
+        | "security"
+        | "staff"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +358,22 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: [
+        "owner",
+        "admin",
+        "supervisor",
+        "storekeeper",
+        "baker",
+        "mixer",
+        "packager",
+        "dispatcher",
+        "sales",
+        "accountant",
+        "cleaner",
+        "security",
+        "staff",
+      ],
+    },
   },
 } as const
