@@ -22,6 +22,13 @@
       "when": 1792681263407,
       "tag": "0002_workers_and_pay_rates",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1792681660186,
+      "tag": "0003_attendance_and_production_logs",
+      "breakpoints": true
     }
   ]
 }

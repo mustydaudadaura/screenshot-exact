@@ -14,6 +14,41 @@ export type Database = {
   }
   public: {
     Tables: {
+      attendance: {
+        Row: {
+          clock_in: string
+          clock_out: string | null
+          id: string
+          recorded_by: string | null
+          work_date: string
+          worker_id: string
+        }
+        Insert: {
+          clock_in?: string
+          clock_out?: string | null
+          id?: string
+          recorded_by?: string | null
+          work_date?: string
+          worker_id: string
+        }
+        Update: {
+          clock_in?: string
+          clock_out?: string | null
+          id?: string
+          recorded_by?: string | null
+          work_date?: string
+          worker_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "attendance_worker_id_fkey"
+            columns: ["worker_id"]
+            isOneToOne: false
+            referencedRelation: "workers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       audit_logs: {
         Row: {
           action: string
@@ -148,6 +183,44 @@ export type Database = {
         }
         Relationships: []
       }
+      production_logs: {
+        Row: {
+          bags: number
+          created_at: string
+          department_id: string
+          id: string
+          rate_per_bag: number
+          recorded_by: string | null
+          work_date: string
+        }
+        Insert: {
+          bags: number
+          created_at?: string
+          department_id: string
+          id?: string
+          rate_per_bag: number
+          recorded_by?: string | null
+          work_date: string
+        }
+        Update: {
+          bags?: number
+          created_at?: string
+          department_id?: string
+          id?: string
+          rate_per_bag?: number
+          recorded_by?: string | null
+          work_date?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "production_logs_department_id_fkey"
+            columns: ["department_id"]
+            isOneToOne: false
+            referencedRelation: "departments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           created_at: string
@@ -243,6 +316,7 @@ export type Database = {
           id: string
           is_active: boolean
           phone: string | null
+          pin: string | null
         }
         Insert: {
           created_at?: string
@@ -251,6 +325,7 @@ export type Database = {
           id?: string
           is_active?: boolean
           phone?: string | null
+          pin?: string | null
         }
         Update: {
           created_at?: string
@@ -259,6 +334,7 @@ export type Database = {
           id?: string
           is_active?: boolean
           phone?: string | null
+          pin?: string | null
         }
         Relationships: [
           {
@@ -283,6 +359,10 @@ export type Database = {
         Returns: boolean
       }
       is_manager: { Args: { _user_id: string }; Returns: boolean }
+      kiosk_punch: {
+        Args: { _pin: string; _worker_id: string }
+        Returns: string
+      }
     }
     Enums: {
       app_role:
