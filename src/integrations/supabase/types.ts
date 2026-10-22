@@ -89,6 +89,38 @@ export type Database = {
         }
         Relationships: []
       }
+      department_pay_rates: {
+        Row: {
+          created_by: string | null
+          department_id: string
+          effective_from: string
+          id: string
+          rate_per_bag: number
+        }
+        Insert: {
+          created_by?: string | null
+          department_id: string
+          effective_from?: string
+          id?: string
+          rate_per_bag: number
+        }
+        Update: {
+          created_by?: string | null
+          department_id?: string
+          effective_from?: string
+          id?: string
+          rate_per_bag?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "department_pay_rates_department_id_fkey"
+            columns: ["department_id"]
+            isOneToOne: false
+            referencedRelation: "departments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       departments: {
         Row: {
           created_at: string
@@ -202,6 +234,41 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      workers: {
+        Row: {
+          created_at: string
+          department_id: string
+          full_name: string
+          id: string
+          is_active: boolean
+          phone: string | null
+        }
+        Insert: {
+          created_at?: string
+          department_id: string
+          full_name: string
+          id?: string
+          is_active?: boolean
+          phone?: string | null
+        }
+        Update: {
+          created_at?: string
+          department_id?: string
+          full_name?: string
+          id?: string
+          is_active?: boolean
+          phone?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "workers_department_id_fkey"
+            columns: ["department_id"]
+            isOneToOne: false
+            referencedRelation: "departments"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
