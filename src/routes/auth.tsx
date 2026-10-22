@@ -1,7 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { Wheat } from "lucide-react";
+import logo from "@/assets/am-logo.png.asset.json";
 import { supabase } from "@/integrations/supabase/client";
 import { getSetupStatus, setupOwner } from "@/lib/setup.functions";
 import { Button } from "@/components/ui/button";
@@ -11,9 +11,9 @@ import { Label } from "@/components/ui/label";
 export const Route = createFileRoute("/auth")({
   head: () => ({
     meta: [
-      { title: "Sign in — Global Concept Bakery" },
+      { title: "Sign in — A&M Global Concept Bakery" },
       { name: "description", content: "Staff sign-in for the Global Concept Bakery Management System." },
-      { property: "og:title", content: "Sign in — Global Concept Bakery" },
+      { property: "og:title", content: "Sign in — A&M Global Concept Bakery" },
       { property: "og:description", content: "Staff sign-in for the Global Concept Bakery Management System." },
     ],
   }),
@@ -50,15 +50,17 @@ function AuthPage() {
   return (
     <div className="grid min-h-screen md:grid-cols-2">
       <div className="hidden flex-col justify-between bg-crust p-10 text-primary-foreground md:flex">
-        <div className="flex items-center gap-2 font-display text-xl"><Wheat /> Global Concept Bakery</div>
+        <div className="font-display text-xl tracking-wide">A&amp;M GLOBAL CONCEPT <span className="text-gold">BAKERY</span></div>
         <div>
           <h1 className="font-display text-5xl leading-tight">Every loaf,<br />every naira,<br />accounted for.</h1>
-          <p className="mt-4 max-w-sm opacity-90">Production, stock, dispatch and staff — one place for the whole bakery.</p>
+          <p className="mt-4 max-w-sm text-lg italic opacity-90">Fresh Bread, Healthy Lives</p>
+          <div className="mt-4 h-1 w-24 rounded bg-accent" />
         </div>
         <div className="text-sm opacity-75">GCBMS</div>
       </div>
       <div className="flex items-center justify-center p-6">
         <form onSubmit={submit} className="w-full max-w-sm space-y-4">
+          <img src={logo.url} alt="A&M Global Concept Bakery" className="mx-auto h-40 w-auto" />
           <h2 className="font-display text-3xl">{needsOwner ? "Set up Super Admin" : "Sign in"}</h2>
           <p className="text-sm text-muted-foreground">
             {needsOwner
