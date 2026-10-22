@@ -15,6 +15,8 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedAuditRouteImport } from './routes/_authenticated/audit'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedDepartmentsRouteImport } from './routes/_authenticated/departments'
+import { Route as AuthenticatedKioskRouteImport } from './routes/_authenticated/kiosk'
+import { Route as AuthenticatedPayrollRouteImport } from './routes/_authenticated/payroll'
 import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
 import { Route as AuthenticatedStaffRouteImport } from './routes/_authenticated/staff'
 import { Route as AuthenticatedWorkersRouteImport } from './routes/_authenticated/workers'
@@ -49,6 +51,16 @@ const AuthenticatedDepartmentsRoute =
     path: '/departments',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedKioskRoute = AuthenticatedKioskRouteImport.update({
+  id: '/kiosk',
+  path: '/kiosk',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedPayrollRoute = AuthenticatedPayrollRouteImport.update({
+  id: '/payroll',
+  path: '/payroll',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedSettingsRoute = AuthenticatedSettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
@@ -71,6 +83,8 @@ export interface FileRoutesByFullPath {
   '/audit': typeof AuthenticatedAuditRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/departments': typeof AuthenticatedDepartmentsRoute
+  '/kiosk': typeof AuthenticatedKioskRoute
+  '/payroll': typeof AuthenticatedPayrollRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/staff': typeof AuthenticatedStaffRoute
   '/workers': typeof AuthenticatedWorkersRoute
@@ -81,6 +95,8 @@ export interface FileRoutesByTo {
   '/audit': typeof AuthenticatedAuditRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/departments': typeof AuthenticatedDepartmentsRoute
+  '/kiosk': typeof AuthenticatedKioskRoute
+  '/payroll': typeof AuthenticatedPayrollRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/staff': typeof AuthenticatedStaffRoute
   '/workers': typeof AuthenticatedWorkersRoute
@@ -93,6 +109,8 @@ export interface FileRoutesById {
   '/_authenticated/audit': typeof AuthenticatedAuditRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/departments': typeof AuthenticatedDepartmentsRoute
+  '/_authenticated/kiosk': typeof AuthenticatedKioskRoute
+  '/_authenticated/payroll': typeof AuthenticatedPayrollRoute
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
   '/_authenticated/staff': typeof AuthenticatedStaffRoute
   '/_authenticated/workers': typeof AuthenticatedWorkersRoute
@@ -105,6 +123,8 @@ export interface FileRouteTypes {
     | '/audit'
     | '/dashboard'
     | '/departments'
+    | '/kiosk'
+    | '/payroll'
     | '/settings'
     | '/staff'
     | '/workers'
@@ -115,6 +135,8 @@ export interface FileRouteTypes {
     | '/audit'
     | '/dashboard'
     | '/departments'
+    | '/kiosk'
+    | '/payroll'
     | '/settings'
     | '/staff'
     | '/workers'
@@ -126,6 +148,8 @@ export interface FileRouteTypes {
     | '/_authenticated/audit'
     | '/_authenticated/dashboard'
     | '/_authenticated/departments'
+    | '/_authenticated/kiosk'
+    | '/_authenticated/payroll'
     | '/_authenticated/settings'
     | '/_authenticated/staff'
     | '/_authenticated/workers'
@@ -181,6 +205,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDepartmentsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/kiosk': {
+      id: '/_authenticated/kiosk'
+      path: '/kiosk'
+      fullPath: '/kiosk'
+      preLoaderRoute: typeof AuthenticatedKioskRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/payroll': {
+      id: '/_authenticated/payroll'
+      path: '/payroll'
+      fullPath: '/payroll'
+      preLoaderRoute: typeof AuthenticatedPayrollRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/settings': {
       id: '/_authenticated/settings'
       path: '/settings'
@@ -209,6 +247,8 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedAuditRoute: typeof AuthenticatedAuditRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedDepartmentsRoute: typeof AuthenticatedDepartmentsRoute
+  AuthenticatedKioskRoute: typeof AuthenticatedKioskRoute
+  AuthenticatedPayrollRoute: typeof AuthenticatedPayrollRoute
   AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
   AuthenticatedStaffRoute: typeof AuthenticatedStaffRoute
   AuthenticatedWorkersRoute: typeof AuthenticatedWorkersRoute
@@ -218,6 +258,8 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAuditRoute: AuthenticatedAuditRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedDepartmentsRoute: AuthenticatedDepartmentsRoute,
+  AuthenticatedKioskRoute: AuthenticatedKioskRoute,
+  AuthenticatedPayrollRoute: AuthenticatedPayrollRoute,
   AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
   AuthenticatedStaffRoute: AuthenticatedStaffRoute,
   AuthenticatedWorkersRoute: AuthenticatedWorkersRoute,

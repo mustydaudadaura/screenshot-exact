@@ -96,6 +96,16 @@ function TeamCard({ dept, workers, rates }: { dept: { id: string; name: string }
     refresh();
   }
 
+  async function setPin(id: string, who: string): Promise<void> {
+    const pin = prompt(`New 4-digit kiosk PIN for ${who}`);
+    if (pin === null) return;
+    if (!/^\d{4}$/.test(pin)) return void toast.error("PIN must be exactly 4 digits");
+    const { error } = await supabase.from("workers").update({ pin }).eq("id", id);
+    if (error) return void toast.error(error.message);
+    toast.success(`PIN set for ${who}`);
+    refresh();
+  }
+
   async function toggle(id: string, is_active: boolean): Promise<void> {
     const { error } = await supabase.from("workers").update({ is_active }).eq("id", id);
     if (error) return void toast.error(error.message);
@@ -139,7 +149,10 @@ function TeamCard({ dept, workers, rates }: { dept: { id: string; name: string }
             <span className={w.is_active ? "" : "text-muted-foreground line-through"}>
               {w.full_name} {w.phone && <span className="text-sm text-muted-foreground">· {w.phone}</span>}
             </span>
+            <span className="flex items-center gap-1">
+            <Button size="sm" variant="outline" onClick={() => setPin(w.id, w.full_name)}>{w.pin ? "Change PIN" : "Set PIN"}</Button>
             <Button size="sm" variant="ghost" onClick={() => toggle(w.id, !w.is_active)}>{w.is_active ? "Remove" : "Restore"}</Button>
+            </span>
           </li>
         ))}
         {workers.length === 0 && <li className="py-2 text-sm text-muted-foreground">No workers yet.</li>}
