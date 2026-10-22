@@ -1,6 +1,6 @@
 import { Link, Outlet, useNavigate } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
-import { LayoutDashboard, Users, HardHat, Building2, Settings, ScrollText, LogOut, Menu } from "lucide-react";
+import { LayoutDashboard, Users, HardHat, Clock, Wallet, Building2, Settings, ScrollText, LogOut, Menu } from "lucide-react";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useMe } from "@/hooks/use-me";
@@ -18,6 +18,8 @@ export function AppShell() {
   const links = [
     { to: "/dashboard", label: "My Dashboard", icon: LayoutDashboard, show: true },
     { to: "/staff", label: "Staff", icon: Users, show: manager },
+    { to: "/kiosk", label: "Attendance Kiosk", icon: Clock, show: manager || me.roles.includes("supervisor") },
+    { to: "/payroll", label: "Payroll", icon: Wallet, show: manager || me.roles.includes("accountant") || me.roles.includes("supervisor") },
     { to: "/workers", label: "Workers & Pay", icon: HardHat, show: manager },
     { to: "/departments", label: "Departments", icon: Building2, show: manager },
     { to: "/settings", label: "Business Settings", icon: Settings, show: manager },
