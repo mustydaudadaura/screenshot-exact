@@ -41,9 +41,9 @@ function Departments() {
     onError: (e: Error) => toast.error(e.message),
   });
 
-  async function update(id: string, patch: { name?: string; is_active?: boolean }) {
+  async function update(id: string, patch: { name?: string; is_active?: boolean }): Promise<void> {
     const { error } = await supabase.from("departments").update(patch).eq("id", id);
-    if (error) return toast.error(error.message);
+    if (error) return void toast.error(error.message);
     toast.success("Saved");
     setEditing(null);
     refresh();

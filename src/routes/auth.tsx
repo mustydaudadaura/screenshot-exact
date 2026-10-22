@@ -27,13 +27,13 @@ function AuthPage() {
   const [name, setName] = useState("");
   const [busy, setBusy] = useState(false);
 
-  async function submit(e: React.FormEvent) {
+  async function submit(e: React.FormEvent): Promise<void> {
     e.preventDefault();
     setBusy(true);
     if (mode === "in") {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       setBusy(false);
-      if (error) return toast.error(error.message === "Invalid login credentials" ? "Wrong email or password" : error.message);
+      if (error) return void toast.error(error.message === "Invalid login credentials" ? "Wrong email or password" : error.message);
       navigate({ to: "/dashboard" });
     } else {
       const { data, error } = await supabase.auth.signUp({
@@ -41,7 +41,7 @@ function AuthPage() {
         options: { emailRedirectTo: window.location.origin + "/dashboard", data: { full_name: name } },
       });
       setBusy(false);
-      if (error) return toast.error(error.message);
+      if (error) return void toast.error(error.message);
       if (data.session) navigate({ to: "/dashboard" });
       else toast.success("Check your email to confirm your account, then sign in.");
     }

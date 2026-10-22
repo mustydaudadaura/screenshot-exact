@@ -42,14 +42,14 @@ function Settings() {
   const [form, setForm] = useState<Record<string, any>>(data);
   const [busy, setBusy] = useState(false);
 
-  async function save() {
-    if (!String(form.business_name ?? "").trim()) return toast.error("Business name is required");
-    if (Number(form.remittance_deadline_hours) < 0 || Number(form.default_credit_limit) < 0) return toast.error("Numbers cannot be negative");
+  async function save(): Promise<void> {
+    if (!String(form["business_name"] ?? "").trim()) return void toast.error("Business name is required");
+    if (Number(form["remittance_deadline_hours"]) < 0 || Number(form["default_credit_limit"]) < 0) return void toast.error("Numbers cannot be negative");
     setBusy(true);
     const patch = Object.fromEntries(FIELDS.map((f) => [f.k, "n" in f ? Number(form[f.k]) : form[f.k] || null]));
     const { error } = await supabase.from("business_settings").update({ ...patch, updated_at: new Date().toISOString() }).eq("id", 1);
     setBusy(false);
-    if (error) return toast.error(error.message);
+    if (error) return void toast.error(error.message);
     toast.success("Settings saved");
     qc.invalidateQueries({ queryKey: ["settings"] });
   }

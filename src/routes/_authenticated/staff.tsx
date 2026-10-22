@@ -40,7 +40,7 @@ export const Route = createFileRoute("/_authenticated/staff")({
   component: Staff,
 });
 
-type Staff = Awaited<ReturnType<typeof staffQuery.queryFn>>[number];
+type Staff = Awaited<ReturnType<NonNullable<typeof staffQuery.queryFn>>>[number];
 
 function Staff() {
   const { data: staff } = useSuspenseQuery(staffQuery);
@@ -111,8 +111,8 @@ function StaffDialog({ staff, depts, canGrantOwner, onClose, onSaved }: {
   const [busy, setBusy] = useState(false);
   const toggle = <T,>(arr: T[], v: T) => (arr.includes(v) ? arr.filter((x) => x !== v) : [...arr, v]);
 
-  async function save() {
-    if (!roles.length) return toast.error("Pick at least one role");
+  async function save(): Promise<void> {
+    if (!roles.length) return void toast.error("Pick at least one role");
     setBusy(true);
     try {
       if (staff) await updateStaffAccess({ data: { user_id: staff.id, roles, department_ids: deptIds } });
