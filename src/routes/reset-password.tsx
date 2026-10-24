@@ -30,7 +30,7 @@ function ResetPage() {
     setBusy(true);
     const { error } = await supabase.auth.updateUser({ password });
     setBusy(false);
-    if (error) return toast.error("This reset link has expired. Ask for a new one from the sign-in page.");
+    if (error) { toast.error("This reset link has expired. Ask for a new one from the sign-in page."); return; }
     toast.success("Password changed");
     navigate({ to: "/dashboard" });
   }
