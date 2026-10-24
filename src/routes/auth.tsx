@@ -73,6 +73,20 @@ function AuthPage() {
           <Button type="submit" size="lg" className="h-12 w-full text-base" disabled={busy}>
             {busy ? "Please wait…" : needsOwner ? "Create Super Admin" : "Sign in"}
           </Button>
+          {!needsOwner && (
+            <button
+              type="button"
+              className="w-full text-center text-sm text-primary underline"
+              onClick={async () => {
+                if (!email) return toast.error("Type your email above first.");
+                const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo: `${window.location.origin}/reset-password` });
+                if (error) toast.error(error.message);
+                else toast.success("If that email has an account, a reset link is on its way.");
+              }}
+            >
+              Forgot password?
+            </button>
+          )}
         </form>
       </div>
     </div>
